@@ -1,0 +1,35 @@
+# Dataset
+*.csv
+# Cache
+.cache.sqlite
+.cache.*
+# Models
+/model-train/models
+*.pkl
+*.pt
+*.pc
+*.spark
+# Docker
+/model-function/influxdb
+/model-function/grafana
+# Environment
+.env
+.env.example
+# Python
+__pycache__
+*.pyc
+.venv
+.venv/*
+# Logs
+*.log
+# IDE
+.vscode
+.idea
+# Jupyter Notebook
+.ipynb_checkpoints
+# OS
+.DS_Store
+# Temporary files
+*.tmp
+# Data
+*.db

@@ -1,0 +1,9 @@
+torch
+pandas
+numpy
+joblib
+openmeteo-requests
+requests-cache
+retry-requests
+influxdb-client
+matplotlib
