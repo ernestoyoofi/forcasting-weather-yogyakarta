@@ -14,7 +14,7 @@
 /model-function/grafana
 # Environment
 .env
-.env.example
+.env.prod
 # Python
 __pycache__
 *.pyc
@@ -33,3 +33,8 @@ __pycache__
 *.tmp
 # Data
 *.db
+# Grafana prod
+grafana-prod*
+grafana-prod*.json
+grafana-prod*.yml
+docker-compose-grafana-prod.yml

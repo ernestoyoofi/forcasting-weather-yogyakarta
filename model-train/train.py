@@ -6,6 +6,14 @@ import torch.nn as nn
 from sklearn.preprocessing import MinMaxScaler
 import joblib
 from torch.utils.data import DataLoader, TensorDataset
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+epoch_loop = int(os.getenv("EPOCH_LOOP"))
+hidden_size = int(os.getenv("HIDDEN_SIZE"))
+hidden_layer = int(os.getenv("HIDDEN_LAYER"))
 
 # First on time, create model folders
 if not os.path.exists("models"):
@@ -37,9 +45,6 @@ X = torch.tensor(X, dtype=torch.float32).cpu()
 y = torch.tensor(y, dtype=torch.float32).cpu()
 
 #4. Model Architecture (Simple LSTM)
-hidden_size=128
-# hidden_size=256
-hidden_layer=3
 print("4. Model Architecture")
 class WeatherLSTM(nn.Module):
   def __init__(self):
@@ -61,8 +66,6 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
 # 5. Training Loop
 print("5. Training Loop")
-# epoch_loop = 500 # 50 Round
-epoch_loop = 300 # 50 Round
 for epoch in range(epoch_loop):
   model.train()
   epoch_loss = 0

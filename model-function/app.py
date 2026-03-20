@@ -6,19 +6,22 @@ import openmeteo_requests
 from datetime import datetime, timedelta
 from influxdb_client import InfluxDBClient, Point, WritePrecision
 from influxdb_client.client.write_api import SYNCHRONOUS
+import os
+from dotenv import load_dotenv
 
-INFLUX_URL = "http://localhost:8086" # Change With Your InfluxDB
-INFLUX_TOKEN = "xxxxxxxxxx" # Change With Your Token
-INFLUX_ORG = "yyyyyyyyy" # Change Your Org
-INFLUX_BUCKET = "weather_forecast" # Change Your Bucket
+load_dotenv()
+
+INFLUX_URL = os.getenv("INFLUX_URL")
+INFLUX_TOKEN = os.getenv("INFLUX_TOKEN")
+INFLUX_ORG = os.getenv("INFLUX_ORG")
+INFLUX_BUCKET = "weather_forecast" # Fix!
+hidden_size = int(os.getenv("HIDDEN_SIZE"))
+hidden_layer = int(os.getenv("HIDDEN_LAYER"))
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 print(f"🖥️  Running on: {device}")
 
 scaler = joblib.load('../model-train/models/scaler.pkl')
-
-hidden_size = 128
-hidden_layer = 3
 
 class WeatherLSTM(torch.nn.Module):
   def __init__(self):
@@ -38,8 +41,10 @@ def fetch_real_history():
   openmeteo = openmeteo_requests.Client()
   url = "https://api.open-meteo.com/v1/forecast"
   params = {
-    "latitude": -7.7956, "longitude": 110.3695,
-    "past_days": 1, "hourly": ["temperature_2m", "relative_humidity_2m", "precipitation", "surface_pressure"]
+    "latitude": -7.7956,
+    "longitude": 110.3695,
+    "past_days": 1,
+    "hourly": ["temperature_2m", "relative_humidity_2m", "precipitation", "surface_pressure"]
   }
   responses = openmeteo.weather_api(url, params=params)
   hourly = responses[0].Hourly()
@@ -110,7 +115,7 @@ def forecast_to_grafana(days=90):
     write_api.write(bucket=INFLUX_BUCKET, org=INFLUX_ORG, record=batch)
   
   client.close()
-  print("✅ Done! Check your Grafana. (Make sure Time Range is now to now+90d)")
+  print("✅ Done! Check your Grafana.")
 
 if __name__ == "__main__":
-  forecast_to_grafana(90)
+  forecast_to_grafana(60)
